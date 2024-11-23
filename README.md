@@ -9,6 +9,8 @@ This project focuses on the classification of bean leaf diseases into three cate
 
 We utilized the dataset provided on [Kaggle](https://www.kaggle.com/datasets/marquis03/bean-leaf-lesions-classification) to train and evaluate our model. The project leverages transfer learning using the VGG16 architecture with fine-tuning to improve classification accuracy.
 
+The repo doesn't contain saved model and the dataset folder because of size constraint from github. Instead, we use [Google Drive](https://drive.google.com/drive/folders/1PwjcgcyMl4b8EKO_-9VkEHg7JNsaiqDI?usp=sharing) to store it.
+
 ---
 
 ## Dataset
