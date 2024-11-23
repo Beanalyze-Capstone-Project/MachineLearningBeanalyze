@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beanalyze - Disease Prediction</title>
+    <!-- Use TensorFlow.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+        }
+        #predictionResult {
+            font-size: 18px;
+            color: #333;
+        }
+        #errorMessage {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Beanalyze - Bean Disease Prediction</h1>
+    <p>Upload a bean leaf image to classify its condition.</p>
+
+    <!-- File Upload -->
+    <input type="file" id="imageUpload" accept="image/*" />
+    <br />
+    
+    <!-- Preview of Uploaded Image -->
+    <img id="previewImage" alt="Uploaded Image Preview" style="display:none;" />
+    
+    <!-- Prediction Result -->
+    <div id="predictionResult"></div>
+    <div id="errorMessage"></div>
+
+    <script type="module">
+        import { singlePrediction } from './predict.js';
+
+        // Get DOM elements
+        const imageUpload = document.getElementById('imageUpload');
+        const previewImage = document.getElementById('previewImage');
+        const predictionResult = document.getElementById('predictionResult');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Handle file upload and display image preview
+        imageUpload.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+
+            if (file) {
+                // Create a URL for the uploaded file and display the preview
+                const imageUrl = URL.createObjectURL(file);
+                previewImage.src = imageUrl;
+                previewImage.style.display = "block";
+
+                // Clear previous predictions
+                predictionResult.textContent = "Processing...";
+                errorMessage.textContent = "";
+
+                try {
+                    // Wait for the image to load before passing it to the model
+                    previewImage.onload = async () => {
+                        const result = await singlePrediction(previewImage);
+                        predictionResult.textContent = `Predicted Class: ${result.predictedClass}, Confidence: ${(result.probabilities * 100).toFixed(2)}%`;
+                    };
+                } catch (error) {
+                    errorMessage.textContent = "Error during prediction. Please try again.";
+                    console.error(error);
+                }
+            } else {
+                predictionResult.textContent = "";
+                errorMessage.textContent = "No image selected.";
+            }
+        });
+    </script>
+</body>
+</html>
